@@ -12,7 +12,7 @@ export const NavBar = () => {
                 <Link to="./" className="nav-link"> Game List </Link>
             </li>
             <li className="navbar__item">
-                Navigation link
+                <Link to="./gameform" className="nav-link"> Add New Game </Link>
             </li>
             {
                 (localStorage.getItem("lu_token") !== null) ?
