@@ -11,6 +11,15 @@ export const EventList = () => {
         getEvents().then(data => setEvents(data))
     }, [])
 
+    const deleteEvent = (id) => {
+        return fetch(`http://localhost:8000/events/${id}`, {
+            method: "DELETE", 
+            headers:{
+                "Authorization": `Token ${localStorage.getItem("lu_token")}`
+            },
+        }).then(() => getEvents().then(data => setEvents(data)))
+    }
+
     return (
         <article className="events">
             <button className="btn btn-2 btn-sep icon-create"
@@ -27,6 +36,7 @@ export const EventList = () => {
                     <div className="event__players"> players needed: {event.game.num_of_players}</div>
                     <div className="event__attendees"> {event.attendees.length} player RSVPed</div>
                     <button id="edit-button" className="button is-link"><Link className="link" to={`/editEvent/${event.id}`}> Edit Event  </Link> </button>
+                    <button id="edit-button" className="button is-link button-delete" onClick={() => deleteEvent(event.id)}> Delete Event  </button>
                     </section>
                 })
             }
