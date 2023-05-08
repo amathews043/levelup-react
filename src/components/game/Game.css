@@ -3,3 +3,7 @@ margin: 10px;
 border: 2px solid black;
 padding: 5px;
 }
+
+.button-delete {
+    margin-left: 10px; 
+}

@@ -11,6 +11,15 @@ export const GameList = (props) => {
         getGames().then(data => setGames(data))
     }, [])
 
+    const deleteGame = (id) => {
+        return fetch(`http://localhost:8000/games/${id}`, {
+            method: "DELETE", 
+            headers:{
+                "Authorization": `Token ${localStorage.getItem("lu_token")}`
+            },
+        }).then(() => getGames().then(data => setGames(data)))
+    }
+
     return (
         <article className="games">
             <button className="btn btn-2 btn-sep icon-create"
@@ -25,6 +34,7 @@ export const GameList = (props) => {
                         <div className="game__players">{game.num_of_players} players needed</div>
                         <div className="game__skillLevel">Skill level is {game.skill_level}</div>
                         <button id="edit-button" className="button is-link"><Link className="link" to={`/editGame/${game.id}`}> Edit Game  </Link> </button>
+                        <button id="edit-button" className="button is-link button-delete" onClick={() => deleteGame(game.id)}> Delete Game  </button>
                     </section>
                 })
             }
