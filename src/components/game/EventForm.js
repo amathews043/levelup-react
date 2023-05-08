@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react"
-import { useNavigate } from 'react-router-dom'
-import { createEvent, getGames } from "../../managers/EventManager"
+import { useNavigate, useParams } from 'react-router-dom'
+import { createEvent, getGames, getEvent, editEvent } from "../../managers/EventManager"
 
 
 export const EventForm = () => {
     const navigate = useNavigate()
     const [games, setGames ] = useState([])
+    const {eventId} = useParams()
 
     useEffect(() => {
         getGames().then(data => setGames(data))
@@ -22,6 +23,10 @@ export const EventForm = () => {
         game: ""
     })
 
+    useEffect(() => {
+        getEvent(eventId).then(data => setCurrentEvent(data))
+    }, [eventId])
+
 
     const changeEventState = (domEvent) => {
         const copy = {...currentEvent}
@@ -29,10 +34,54 @@ export const EventForm = () => {
         setCurrentEvent(copy)
     }
 
+    const editButton = (currentEvent, eventId) => {
+        return <button type="submit"
+        onClick={evt => {
+            // Prevent form from being submitted
+            evt.preventDefault()
+
+            const Event = {
+                description: currentEvent.description, 
+                date: currentEvent.date, 
+                game: parseInt(currentEvent.game)
+            }
+
+            // Send POST request to your API
+
+            editEvent(Event, eventId)
+                .then(() => navigate("/events"))
+        }}
+        className="btn btn-primary">Submit Edit</button>
+    }
+
+    const createButton = (currentEvent) => {
+        return <button type="submit"
+        onClick={evt => {
+            // Prevent form from being submitted
+            evt.preventDefault()
+
+            const Event = {
+                description: currentEvent.description, 
+                date: currentEvent.date, 
+                game: parseInt(currentEvent.game)
+            }
+
+            // Send POST request to your API
+
+            createEvent(Event)
+                .then(() => navigate("/events"))
+        }}
+        className="btn btn-primary">Create</button>
+    }
+
 
     return (
         <form className="EventForm">
-            <h2 className="EventForm__title">Register New Event</h2>
+            {
+                eventId ? <h2 className="EventForm__title">Edit Event</h2> : 
+                <h2 className="EventForm__title">Register New Event</h2>
+            }
+            
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="title">Description: </label>
@@ -67,22 +116,10 @@ export const EventForm = () => {
                 </div>
             </fieldset>
 
-            <button type="submit"
-                onClick={evt => {
-                    // Prevent form from being submitted
-                    evt.preventDefault()
-
-                    const Event = {
-                        description: currentEvent.description, 
-                        date: currentEvent.date, 
-                        game: parseInt(currentEvent.game)
-                    }
-
-                    // Send POST request to your API
-                    createEvent(Event)
-                        .then(() => navigate("/events"))
-                }}
-                className="btn btn-primary">Create</button>
+            {
+                eventId ? editButton(currentEvent, eventId)
+            : createButton(currentEvent)
+            }
         </form>
     )
 }

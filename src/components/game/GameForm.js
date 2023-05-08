@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react"
-import { useNavigate } from 'react-router-dom'
-import { createGame, getGameTypes } from '../../managers/GameManager.js'
+import { useNavigate, useParams } from 'react-router-dom'
+import { createGame, getGameTypes, getGame, editGame } from '../../managers/GameManager.js'
 
 
 export const GameForm = () => {
     const navigate = useNavigate()
+    const {gameId} = useParams()
     const [gameTypes, setGameTypes] = useState([])
 
     /*
@@ -24,6 +25,10 @@ export const GameForm = () => {
         getGameTypes().then(data => setGameTypes(data))
     }, [])
 
+    useEffect(() => {
+        getGame(gameId).then(data => setCurrentGame(data))
+    }, [gameId])
+
     const changeGameState = (domEvent) => {
         const copy = {...currentGame}
         copy[domEvent.target.name] = domEvent.target.value
@@ -38,7 +43,12 @@ export const GameForm = () => {
 
     return (
         <form className="gameForm">
-            <h2 className="gameForm__title">Register New Game</h2>
+            {
+                gameId ? <h2 className="gameForm__title"> Edit Game Details </h2>
+                : 
+                <h2 className="gameForm__title">Register New Game</h2>
+            }
+            
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="title">Title: </label>
@@ -89,8 +99,28 @@ export const GameForm = () => {
                 </select>
                 </div>
             </fieldset>
+            {
+                gameId ? 
+                <button type="submit"
+                onClick={evt => {
+                    // Prevent form from being submitted
+                    evt.preventDefault()
 
-            <button type="submit"
+                    const game = {
+                        maker: currentGame.maker,
+                        title: currentGame.title,
+                        number_of_players: currentGame.num_of_players,
+                        skill_level: currentGame.skill_level,
+                        game_type: currentGame.game_type
+                    }
+
+                    // Send POST request to your API
+                    editGame(game, gameId)
+                        .then(() => navigate("/games"))
+                }}
+                className="btn btn-primary">Edit Game</button>
+                :
+                <button type="submit"
                 onClick={evt => {
                     // Prevent form from being submitted
                     evt.preventDefault()
@@ -108,6 +138,9 @@ export const GameForm = () => {
                         .then(() => navigate("/games"))
                 }}
                 className="btn btn-primary">Create</button>
+            }
+
+        
         </form>
     )
 }
