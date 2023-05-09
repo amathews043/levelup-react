@@ -1,5 +1,5 @@
 import React, {useEffect, useState } from "react"
-import { getEvents } from "../../managers/EventManager"
+import { getEvents, leaveEvent, joinEvent } from "../../managers/EventManager"
 import { useNavigate, Link } from "react-router-dom"
 import "./Game.css" 
 
@@ -20,6 +20,18 @@ export const EventList = () => {
         }).then(() => getEvents().then(data => setEvents(data)))
     }
 
+    const joinButton = (eventId) => {
+        joinEvent(eventId).then(()=> {
+            getEvents().then(data => setEvents(data))
+        })
+    }
+
+    const leaveButton = (eventId) => {
+        leaveEvent(eventId).then(() => {
+            getEvents().then(data => setEvents(data))
+        })
+    }
+
     return (
         <article className="events">
             <button className="btn btn-2 btn-sep icon-create"
@@ -37,6 +49,11 @@ export const EventList = () => {
                     <div className="event__attendees"> {event.attendees.length} player RSVPed</div>
                     <button id="edit-button" className="button is-link"><Link className="link" to={`/editEvent/${event.id}`}> Edit Event  </Link> </button>
                     <button id="edit-button" className="button is-link button-delete" onClick={() => deleteEvent(event.id)}> Delete Event  </button>
+                    {
+                        event.joined ? <button id="edit-button" className="button is-link button-delete" onClick={() => leaveButton(event.id)}> Leave Event  </button>
+                        : 
+                        <button id="edit-button" className="button is-link button-delete" onClick={() => joinButton(event.id)}> Join Event  </button>
+                    }
                     </section>
                 })
             }

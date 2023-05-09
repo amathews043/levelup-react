@@ -27,6 +27,7 @@ export const GameList = (props) => {
                     navigate({ pathname: "/newGames" })
                 }}
             >Register New Game</button>
+            <div className="flex">
             {
                 games.map(game => {
                     return <section key={`game--${game.id}`} className="game">
@@ -38,6 +39,7 @@ export const GameList = (props) => {
                     </section>
                 })
             }
+            </div>
         </article>
     )
 }
