@@ -109,7 +109,7 @@ export const GameForm = () => {
                     const game = {
                         maker: currentGame.maker,
                         title: currentGame.title,
-                        number_of_players: currentGame.num_of_players,
+                        num_of_players: currentGame.num_of_players,
                         skill_level: currentGame.skill_level,
                         game_type: currentGame.game_type
                     }
@@ -128,7 +128,7 @@ export const GameForm = () => {
                     const game = {
                         maker: currentGame.maker,
                         title: currentGame.title,
-                        number_of_players: currentGame.num_of_players,
+                        num_of_players: currentGame.num_of_players,
                         skill_level: currentGame.skill_level,
                         game_type: currentGame.game_type
                     }

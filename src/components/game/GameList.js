@@ -17,7 +17,8 @@ export const GameList = (props) => {
             headers:{
                 "Authorization": `Token ${localStorage.getItem("lu_token")}`
             },
-        }).then(() => getGames().then(data => setGames(data)))
+        }).then(() => getGames()
+        .then(data => setGames(data)))
     }
 
     return (
